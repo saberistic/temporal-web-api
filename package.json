@@ -1,0 +1,44 @@
+{
+  "name": "temporal-web-api",
+  "version": "1.0.0",
+  "description": "Temporal Web API",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
+    "lint": "eslint \"src/**/*.{ts,js}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,js}\" --fix",
+    "dev": "tsc -w & nodemon ./src/index.ts",
+    "dev:sample-worker": "nodemon ./src/worker/sample.ts",
+    "start": "node ./dist/index.js",
+    "start:sample-worker": "node ./dist/worker/sample.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@temporalio/client": "^1.7.4",
+    "@temporalio/worker": "^1.7.4",
+    "@temporalio/workflow": "^1.7.4",
+    "@types/jsonwebtoken": "^9.0.7",
+    "config": "^3.3.12",
+    "cors": "^2.8.5",
+    "debug": "^4.3.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/config": "^3.3.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
+    "eslint": "^9.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

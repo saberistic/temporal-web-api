@@ -1,0 +1,2 @@
+GET http://localhost:5050/api/workflow/status?id=sampleWorkflow-385bd934-bfb9-409e-9665-8ede41e0fcd9
+content-type: application/json
