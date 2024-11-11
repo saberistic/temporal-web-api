@@ -4,27 +4,40 @@ import { v4 as uuidv4 } from 'uuid';
 import { workflowRegistry } from '../workflows/registry'; // Import the workflow registry
 
 class WorkflowController {
+  findWorkflow = (name: string) => {
+    const workflow = workflowRegistry[name as keyof typeof workflowRegistry];
+    if (!workflow) {
+      return { workflow: null, queries: null, taskQueue: null };
+    }
+
+    return workflow;
+  };
+
   startWorkflow = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name, args } = req.body;
 
       if (!name) {
-        throw new Error('Workflow name is required');
+        res.status(400).json({
+          message: 'Workflow name is required',
+        });
+        return;
       }
 
       const client = await createTemporalClient();
       const id = `${name}-${uuidv4()}`;
 
-      const { workflow, taskQueue } =
-        workflowRegistry[name as keyof typeof workflowRegistry];
-
+      const { workflow, taskQueue } = this.findWorkflow(name);
       if (!workflow) {
-        throw new Error(`Workflow ${name} not found in registry`);
+        res.status(404).json({
+          message: `Workflow ${name} not found in registry`,
+        });
+        return;
       }
 
       await client.start(workflow, {
         args: args || [],
-        taskQueue,
+        taskQueue: taskQueue!,
         workflowId: id,
       });
 
@@ -46,7 +59,10 @@ class WorkflowController {
       const { id } = req.query;
 
       if (!id) {
-        throw new Error('Workflow ID is required');
+        res.status(400).json({
+          message: 'Workflow ID is required',
+        });
+        return;
       }
 
       const client = await createTemporalClient();
@@ -55,11 +71,12 @@ class WorkflowController {
       const idStr = id as string;
       const name = idStr.substring(0, idStr.indexOf('-'));
 
-      const { workflow, queries } =
-        workflowRegistry[name as keyof typeof workflowRegistry];
-
+      const { workflow, queries } = this.findWorkflow(name);
       if (!workflow) {
-        throw new Error(`Workflow ${name} not found in registry`);
+        res.status(404).json({
+          message: `Workflow ${name} not found in registry`,
+        });
+        return;
       }
 
       const queryResults: Record<string, string> = {};
